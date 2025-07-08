@@ -1270,30 +1270,21 @@ function touchStarted() {
 		}
 	}
 
-	// Check if touching bouncer control areas (prevent ball spawning)
+	// ONLY allow ball spawning in center area - nothing else should spawn balls
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
 	
-	// Left bouncer control area
-	if (touchX < 100 && touchY > height - 100 && touchY < height - 20) {
-		return; // Don't spawn ball, this is for bouncer control
-	}
-	
-	// Right bouncer control area
-	if (touchX > width - 100 && touchY > height - 100 && touchY < height - 20) {
-		return; // Don't spawn ball, this is for bouncer control
-	}
-	
-	// Only allow ball spawning in center area
 	let centerX = width/2;
 	let centerY = height/2;
 	let spawnRadius = 100;
 	
+	// ONLY spawn ball if touching the center spawn area
 	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
 		// Spawn random ball immediately (no drag)
 		let ball = new Ball(centerX, centerY, 20);
 		balls.push(ball);
 	}
+	// If not in spawn area, do nothing (no ball spawning)
 }
 
 function touchMoved() {
@@ -1331,13 +1322,13 @@ function drawMobileControls() {
 		rect(width - 90, height - 100, 80, 40);
 		fill(255, 255, 255, 150);
 		text("RIGHT", width - 50, height - 90);
-		text("W", width - 50, height - 70);
+		text("UP", width - 50, height - 70);
 		
 		// Right bouncer DOWN button
 		fill(255, 255, 255, 30);
 		rect(width - 90, height - 60, 80, 40);
 		fill(255, 255, 255, 150);
-		text("S", width - 50, height - 40);
+		text("DOWN", width - 50, height - 40);
 		
 		// Draw ball spawning area indicator
 		fill(255, 255, 255, 20);
