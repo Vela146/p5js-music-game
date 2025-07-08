@@ -262,21 +262,35 @@ class Ball {
 
 function setup() {
 	// Initialize walls and bouncers FIRST
-	wallT = {x: width/2, y: 0, width: 800, height: 10};
-	wallB = {x: width/2, y: 400, width: 800, height: 10};
-	wallL = {x: 0, y: 200, width: 10, height: 400};
-	wallR = {x: 800, y: 200, width: 10, height: 400};
-	bouncerR = {x: 50, y: 200, width: 8, height: 80};
-	bouncerL = {x: 750, y: 200, width: 8, height: 80};
-
-	createCanvas(800, 400);
+	createCanvas(windowWidth, windowHeight);
 	background(0);
 	noStroke();
-	
+	wallT = {x: width/2, y: 0, width: width, height: 10};
+	wallB = {x: width/2, y: height, width: width, height: 10};
+	wallL = {x: 0, y: height/2, width: 10, height: height};
+	wallR = {x: width, y: height/2, width: 10, height: height};
+	bouncerR = {x: 50, y: height/2, width: 8, height: 80};
+	bouncerL = {x: width-50, y: height/2, width: 8, height: 80};
+
 	// Initialize mode 1 (Pure Harmony - no obstacles)
 	setupLevel(1);
 	
 	// Create musical mode selection buttons
+	createButtons();
+}
+
+function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
+	// Recalculate wall and bouncer positions
+	wallT = {x: width/2, y: 0, width: width, height: 10};
+	wallB = {x: width/2, y: height, width: width, height: 10};
+	wallL = {x: 0, y: height/2, width: 10, height: height};
+	wallR = {x: width, y: height/2, width: 10, height: height};
+	bouncerR.x = 50;
+	bouncerR.y = height/2;
+	bouncerL.x = width-50;
+	bouncerL.y = height/2;
+	// Reposition buttons in top right corner
 	createButtons();
 }
 
@@ -589,6 +603,9 @@ function draw() {
 
 	// Update free balls rhythm group
 	rhythms.F.balls = balls.filter(ball => !ball.isGlued);
+
+	// Add mobile controls display
+	drawMobileControls();
 }
 
 // Level management functions
@@ -604,8 +621,8 @@ function setupLevel(level) {
 	smol = [];
 
 	// Reset bouncer positions
-	if (typeof bouncerL !== 'undefined') bouncerL.y = 200;
-	if (typeof bouncerR !== 'undefined') bouncerR.y = 200;
+	if (typeof bouncerL !== 'undefined') bouncerL.y = height/2;
+	if (typeof bouncerR !== 'undefined') bouncerR.y = height/2;
 
 	// Stop all sounds
 	if (synthsInitialized) {
@@ -786,14 +803,21 @@ function handleObstacleCollision(ball, obstacle) {
 // Button creation and management
 function createButtons() {
 	buttons = [];
-	buttons.push(new Button(755, 10, 35, 25, "1", 1));
-	buttons.push(new Button(715, 10, 35, 25, "2", 2));
-	buttons.push(new Button(675, 10, 35, 25, "3", 3));
-	buttons.push(new Button(635, 10, 35, 25, "4", 4));
-	buttons.push(new Button(595, 10, 35, 25, "5", 5));
-	buttons.push(new Button(555, 10, 35, 25, "6", 6));
-	buttons.push(new Button(515, 10, 35, 25, "7", 7));
-	buttons.push(new Button(475, 10, 35, 25, "8", 8));
+	// Position buttons in top right corner, larger for mobile
+	let buttonWidth = 45; // Increased from 35 for touch
+	let buttonHeight = 35; // Increased from 25 for touch
+	let buttonSpacing = 8; // Increased spacing
+	let startX = width - 60 - (buttonWidth + buttonSpacing) * 7; // 8 buttons total
+	let startY = 15; // Slightly lower for mobile
+	
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 0, startY, buttonWidth, buttonHeight, "1", 1));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 1, startY, buttonWidth, buttonHeight, "2", 2));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 2, startY, buttonWidth, buttonHeight, "3", 3));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 3, startY, buttonWidth, buttonHeight, "4", 4));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 4, startY, buttonWidth, buttonHeight, "5", 5));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 5, startY, buttonWidth, buttonHeight, "6", 6));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 6, startY, buttonWidth, buttonHeight, "7", 7));
+	buttons.push(new Button(startX + (buttonWidth + buttonSpacing) * 7, startY, buttonWidth, buttonHeight, "8", 8));
 }
 
 function displayButtons() {
@@ -1009,29 +1033,42 @@ function RhythmsStuff(){
 //bouncer controls
 //i hate maths
 function moveThemThangs() {
-//const means a constant variable
-	const speed = 5
-	// const halfPaddle = bouncerR.height / 2
+	const speed = 5;
+	
+	// Keyboard controls (desktop)
+	if (keyIsDown(UP_ARROW)) bouncerL.y -= speed;
+	if (keyIsDown(DOWN_ARROW)) bouncerL.y += speed;
+	if (keyIsDown(87)) bouncerR.y -= speed; // W
+	if (keyIsDown(83)) bouncerR.y += speed; // S
+	
+	// Mobile touch controls
+	if (width < 800 && touches.length > 0) {
+		let touch = touches[0];
+		
+		// Left bouncer control (left side of screen)
+		if (touch.x < width/2 && touch.y > height - 120) {
+			if (touch.y < height - 70) {
+				bouncerL.y -= speed; // UP
+			} else {
+				bouncerL.y += speed; // DOWN
+			}
+		}
+		
+		// Right bouncer control (right side of screen)
+		if (touch.x > width/2 && touch.y > height - 120) {
+			if (touch.y < height - 70) {
+				bouncerR.y -= speed; // W
+			} else {
+				bouncerR.y += speed; // S
+			}
+		}
+	}
 
-	// LEFT bouncer: UP/DOWN arrows
-	if (keyIsDown(UP_ARROW)) bouncerL.y -= speed
-	if (keyIsDown(DOWN_ARROW)) bouncerL.y += speed
-	// RIGHT bouncer: W/S
-	if (keyIsDown(87)) bouncerR.y -= speed // W
-	if (keyIsDown(83)) bouncerR.y += speed // S
-
-	//makes sure the bouncers don't move outside of the walls
-	//wallT's y position is 0, wall height is 10, halfPaddle is 40
-	//wallB's y position is 400, wall height is 10, halfPaddle is 40
-	//the bouncers are center positioned, so to be safe top limit should be 45, bottom 355
-	//i really hate maths
-	const minY = 45
-	//wallT.y + wallT.height / 2 + halfPaddle
-	const maxY = 355
-	//wallB.y - wallB.height / 2 - halfPaddle
-
-	bouncerL.y = constrain(bouncerL.y, minY, maxY)
-	bouncerR.y = constrain(bouncerR.y, minY, maxY)
+	// Constrain bouncers to screen bounds
+	const minY = 45;
+	const maxY = height - 45;
+	bouncerL.y = constrain(bouncerL.y, minY, maxY);
+	bouncerR.y = constrain(bouncerR.y, minY, maxY);
 }
 
 //smol
@@ -1204,4 +1241,98 @@ function getBackgroundColorsForLevel(level) {
 // Utility function for panning
 function getPanForX(x) {
 	return map(x, 0, width, -1, 1);
+}
+
+// Mobile touch controls
+function touchStarted() {
+	// Resume AudioContext if it's suspended
+	if (getAudioContext().state !== 'running') {
+		getAudioContext().resume();
+	}
+
+	if (!synthsInitialized) {
+		// Initialize synths on first user interaction
+		initSynths();
+	}
+
+	// Check if touching a button first
+	for (let button of buttons) {
+		if (button.isHovered) {
+			setupLevel(button.level);
+			return; // Exit early to prevent ball spawning
+		}
+	}
+
+	// Start drag for directional shooting - always from center
+	isDragging = true;
+	isDraggingFar = false;
+	dragStartX = width/2;
+	dragStartY = height/2;
+	currentDragX = touches[0].x;
+	currentDragY = touches[0].y;
+}
+
+function touchMoved() {
+	if (isDragging) {
+		currentDragX = touches[0].x;
+		currentDragY = touches[0].y;
+		let dx = currentDragX - dragStartX;
+		let dy = currentDragY - dragStartY;
+		let distance = sqrt(dx * dx + dy * dy);
+		if (distance > 10) {
+			isDraggingFar = true;
+		}
+	}
+}
+
+function touchEnded() {
+	if (isDragging) {
+		let dx = currentDragX - dragStartX;
+		let dy = currentDragY - dragStartY;
+		let distance = sqrt(dx * dx + dy * dy);
+		let spawnX = width/2;
+		let spawnY = height/2;
+		
+		if (distance > 10) {
+			// Milder speed mapping
+			let minSpeed = 4;
+			let maxSpeed = 12;
+			let maxDrag = 140;
+			let t = constrain(distance, 0, maxDrag) / maxDrag;
+			let speed = lerp(minSpeed, maxSpeed, t);
+			let normalizedDx = (dx / distance) * speed;
+			let normalizedDy = (dy / distance) * speed;
+			let ball = new Ball(spawnX, spawnY, 20);
+			ball.vx = normalizedDx;
+			ball.vy = normalizedDy;
+			balls.push(ball);
+		} else {
+			// Random ball - always spawn in center
+			let ball = new Ball(spawnX, spawnY, 20);
+			balls.push(ball);
+		}
+		isDragging = false;
+		isDraggingFar = false;
+	}
+}
+
+// Mobile bouncer controls with touch areas
+function drawMobileControls() {
+	// Draw touch areas for bouncer controls (only on mobile)
+	if (width < 800) { // Mobile detection
+		// Left bouncer touch area
+		fill(255, 255, 255, 50);
+		noStroke();
+		rect(10, height - 120, 80, 100);
+		fill(255, 255, 255, 150);
+		textAlign(CENTER, CENTER);
+		textSize(12);
+		text("UP/DOWN", 50, height - 70);
+		
+		// Right bouncer touch area
+		fill(255, 255, 255, 50);
+		rect(width - 90, height - 120, 80, 100);
+		fill(255, 255, 255, 150);
+		text("W/S", width - 50, height - 70);
+	}
 }
