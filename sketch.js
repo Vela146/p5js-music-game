@@ -1174,29 +1174,30 @@ function moveThemThangs() {
 	
 	// Mobile touch controls
 	if (width < 800 && touches.length > 0) {
-		let touch = touches[0];
-		
-		// Left touch area controls RIGHT bouncer (which is on the left side)
-		if (touch.x < 100) {
-			// Right bouncer UP button
-			if (touch.y > height - 100 && touch.y < height - 60) {
-				bouncerR.y -= speed; // UP
+		// Allow simultaneous control of both bouncers
+		for (let i = 0; i < touches.length; i++) {
+			let touch = touches[i];
+			// Left touch area controls RIGHT bouncer (which is on the left side)
+			if (touch.x < 100) {
+				// Right bouncer UP button
+				if (touch.y > height - 100 && touch.y < height - 60) {
+					bouncerR.y -= speed; // UP
+				}
+				// Right bouncer DOWN button
+				if (touch.y > height - 60 && touch.y < height - 20) {
+					bouncerR.y += speed; // DOWN
+				}
 			}
-			// Right bouncer DOWN button
-			if (touch.y > height - 60 && touch.y < height - 20) {
-				bouncerR.y += speed; // DOWN
-			}
-		}
-		
-		// Right touch area controls LEFT bouncer (which is on the right side)
-		if (touch.x > width - 100) {
-			// Left bouncer UP button
-			if (touch.y > height - 100 && touch.y < height - 60) {
-				bouncerL.y -= speed; // UP
-			}
-			// Left bouncer DOWN button
-			if (touch.y > height - 60 && touch.y < height - 20) {
-				bouncerL.y += speed; // DOWN
+			// Right touch area controls LEFT bouncer (which is on the right side)
+			if (touch.x > width - 100) {
+				// Left bouncer UP button
+				if (touch.y > height - 100 && touch.y < height - 60) {
+					bouncerL.y -= speed; // UP
+				}
+				// Left bouncer DOWN button
+				if (touch.y > height - 60 && touch.y < height - 20) {
+					bouncerL.y += speed; // DOWN
+				}
 			}
 		}
 	}
