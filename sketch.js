@@ -1045,20 +1045,26 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left touch area controls LEFT bouncer (UP/DOWN like PC)
-		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
-			if (touch.y < height - 60) {
+		// Left bouncer controls - separate up/down buttons
+		if (touch.x < 100) {
+			// Left bouncer UP button
+			if (touch.y > height - 100 && touch.y < height - 60) {
 				bouncerL.y -= speed; // UP
-			} else {
+			}
+			// Left bouncer DOWN button
+			if (touch.y > height - 60 && touch.y < height - 20) {
 				bouncerL.y += speed; // DOWN
 			}
 		}
 		
-		// Right touch area controls RIGHT bouncer (W/S like PC)
-		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
-			if (touch.y < height - 60) {
+		// Right bouncer controls - separate up/down buttons
+		if (touch.x > width - 100) {
+			// Right bouncer UP button
+			if (touch.y > height - 100 && touch.y < height - 60) {
 				bouncerR.y -= speed; // W (up)
-			} else {
+			}
+			// Right bouncer DOWN button
+			if (touch.y > height - 60 && touch.y < height - 20) {
 				bouncerR.y += speed; // S (down)
 			}
 		}
@@ -1257,17 +1263,28 @@ function touchStarted() {
 
 	// Check if touching a button first
 	for (let button of buttons) {
-		if (button.isHovered) {
+		if (touches[0].x > button.x && touches[0].x < button.x + button.width &&
+			touches[0].y > button.y && touches[0].y < button.y + button.height) {
 			setupLevel(button.level);
 			return; // Exit early to prevent ball spawning
 		}
 	}
 
-	// Allow ball spawning in center area
+	// Check if touching bouncer control areas (prevent ball spawning)
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
 	
-	// Check if touch is in the center area (100px from center)
+	// Left bouncer control area
+	if (touchX < 100 && touchY > height - 100 && touchY < height - 20) {
+		return; // Don't spawn ball, this is for bouncer control
+	}
+	
+	// Right bouncer control area
+	if (touchX > width - 100 && touchY > height - 100 && touchY < height - 20) {
+		return; // Don't spawn ball, this is for bouncer control
+	}
+	
+	// Only allow ball spawning in center area
 	let centerX = width/2;
 	let centerY = height/2;
 	let spawnRadius = 100;
@@ -1291,22 +1308,36 @@ function touchEnded() {
 function drawMobileControls() {
 	// Draw touch areas for bouncer controls (only on mobile)
 	if (width < 800) { // Mobile detection
-		// Left touch area controls RIGHT bouncer (W/S like PC)
+		// Left bouncer controls - separate up/down buttons
+		// Left bouncer UP button
 		fill(255, 255, 255, 30);
 		noStroke();
-		rect(10, height - 100, 80, 80);
+		rect(10, height - 100, 80, 40);
 		fill(255, 255, 255, 150);
 		textAlign(CENTER, CENTER);
 		textSize(10);
-		text("RIGHT", 50, height - 80);
-		text("W/S", 50, height - 60);
+		text("LEFT", 50, height - 90);
+		text("UP", 50, height - 70);
 		
-		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
+		// Left bouncer DOWN button
 		fill(255, 255, 255, 30);
-		rect(width - 90, height - 100, 80, 80);
+		rect(10, height - 60, 80, 40);
 		fill(255, 255, 255, 150);
-		text("LEFT", width - 50, height - 80);
-		text("UP/DOWN", width - 50, height - 60);
+		text("DOWN", 50, height - 40);
+		
+		// Right bouncer controls - separate up/down buttons
+		// Right bouncer UP button
+		fill(255, 255, 255, 30);
+		rect(width - 90, height - 100, 80, 40);
+		fill(255, 255, 255, 150);
+		text("RIGHT", width - 50, height - 90);
+		text("W", width - 50, height - 70);
+		
+		// Right bouncer DOWN button
+		fill(255, 255, 255, 30);
+		rect(width - 90, height - 60, 80, 40);
+		fill(255, 255, 255, 150);
+		text("S", width - 50, height - 40);
 		
 		// Draw ball spawning area indicator
 		fill(255, 255, 255, 20);
