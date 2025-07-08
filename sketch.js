@@ -1045,21 +1045,21 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left touch area controls LEFT bouncer (UP/DOWN like PC)
+		// Left touch area controls RIGHT bouncer (W/S like PC)
 		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
-			if (touch.y < height - 60) {
-				bouncerL.y -= speed; // UP
-			} else {
-				bouncerL.y += speed; // DOWN
-			}
-		}
-		
-		// Right touch area controls RIGHT bouncer (W/S like PC)
-		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
 				bouncerR.y -= speed; // W (up)
 			} else {
 				bouncerR.y += speed; // S (down)
+			}
+		}
+		
+		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
+		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
+			if (touch.y < height - 60) {
+				bouncerL.y -= speed; // UP
+			} else {
+				bouncerL.y += speed; // DOWN
 			}
 		}
 	}
@@ -1273,80 +1273,40 @@ function touchStarted() {
 	let spawnRadius = 30;
 	
 	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
-		// Start drag for directional shooting - always from center
-		isDragging = true;
-		isDraggingFar = false;
-		dragStartX = centerX;
-		dragStartY = centerY;
-		currentDragX = touchX;
-		currentDragY = touchY;
+		// Spawn random ball immediately (no drag)
+		let ball = new Ball(centerX, centerY, 20);
+		balls.push(ball);
 	}
 }
 
 function touchMoved() {
-	if (isDragging) {
-		currentDragX = touches[0].x;
-		currentDragY = touches[0].y;
-		let dx = currentDragX - dragStartX;
-		let dy = currentDragY - dragStartY;
-		let distance = sqrt(dx * dx + dy * dy);
-		if (distance > 10) {
-			isDraggingFar = true;
-		}
-	}
+	// Disabled drag direction feature for mobile - no action needed
 }
 
 function touchEnded() {
-	if (isDragging) {
-		let dx = currentDragX - dragStartX;
-		let dy = currentDragY - dragStartY;
-		let distance = sqrt(dx * dx + dy * dy);
-		let spawnX = width/2;
-		let spawnY = height/2;
-		
-		if (distance > 10) {
-			// Milder speed mapping
-			let minSpeed = 4;
-			let maxSpeed = 12;
-			let maxDrag = 140;
-			let t = constrain(distance, 0, maxDrag) / maxDrag;
-			let speed = lerp(minSpeed, maxSpeed, t);
-			let normalizedDx = (dx / distance) * speed;
-			let normalizedDy = (dy / distance) * speed;
-			let ball = new Ball(spawnX, spawnY, 20);
-			ball.vx = normalizedDx;
-			ball.vy = normalizedDy;
-			balls.push(ball);
-		} else {
-			// Random ball - always spawn in center
-			let ball = new Ball(spawnX, spawnY, 20);
-			balls.push(ball);
-		}
-		isDragging = false;
-		isDraggingFar = false;
-	}
+	// Disabled drag direction feature for mobile - no action needed
 }
 
 // Mobile bouncer controls with touch areas
 function drawMobileControls() {
 	// Draw touch areas for bouncer controls (only on mobile)
 	if (width < 800) { // Mobile detection
-		// Left touch area controls LEFT bouncer (UP/DOWN like PC)
+		// Left touch area controls RIGHT bouncer (W/S like PC)
 		fill(255, 255, 255, 30);
 		noStroke();
 		rect(10, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
 		textAlign(CENTER, CENTER);
 		textSize(10);
-		text("LEFT", 50, height - 80);
-		text("UP/DOWN", 50, height - 60);
+		text("RIGHT", 50, height - 80);
+		text("W/S", 50, height - 60);
 		
-		// Right touch area controls RIGHT bouncer (W/S like PC)
+		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
 		fill(255, 255, 255, 30);
 		rect(width - 90, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
-		text("RIGHT", width - 50, height - 80);
-		text("W/S", width - 50, height - 60);
+		text("LEFT", width - 50, height - 80);
+		text("UP/DOWN", width - 50, height - 60);
 		
 		// Draw ball spawning area indicator (extremely small)
 		fill(255, 255, 255, 20);
