@@ -277,6 +277,19 @@ function setup() {
 	
 	// Create musical mode selection buttons
 	createButtons();
+	
+	// Prevent text selection on mobile
+	if (width < 800) {
+		// Prevent context menu
+		document.addEventListener('contextmenu', function(e) {
+			e.preventDefault();
+		});
+		
+		// Prevent text selection
+		document.addEventListener('selectstart', function(e) {
+			e.preventDefault();
+		});
+	}
 }
 
 function windowResized() {
@@ -889,6 +902,11 @@ function initSynths() {
 }
 
 function mousePressed() {
+	// Disable mouse functions on mobile
+	if (width < 800) {
+		return;
+	}
+	
 	// Resume AudioContext if it's suspended
 	if (getAudioContext().state !== 'running') {
 		getAudioContext().resume();
@@ -923,6 +941,11 @@ function mousePressed() {
 }
 
 function mouseDragged() {
+	// Disable mouse functions on mobile
+	if (width < 800) {
+		return;
+	}
+	
 	if (isDragging) {
 		currentDragX = mouseX;
 		currentDragY = mouseY;
@@ -936,6 +959,11 @@ function mouseDragged() {
 }
 
 function mouseReleased() {
+	// Disable mouse functions on mobile
+	if (width < 800) {
+		return;
+	}
+	
 	if (isDragging) {
 		let dx = currentDragX - dragStartX;
 		let dy = currentDragY - dragStartY;
