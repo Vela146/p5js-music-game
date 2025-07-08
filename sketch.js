@@ -1263,17 +1263,21 @@ function touchStarted() {
 		}
 	}
 
-	// Only allow ball spawning in center area (not near bouncer controls)
+	// Only allow ball spawning in very small center area
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
 	
-	// Check if touch is in the center area (not in bouncer control zones)
-	if (touchX > 120 && touchX < width - 120 && touchY < height - 120) {
+	// Check if touch is in the small center area (100px from center)
+	let centerX = width/2;
+	let centerY = height/2;
+	let spawnRadius = 100;
+	
+	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
 		// Start drag for directional shooting - always from center
 		isDragging = true;
 		isDraggingFar = false;
-		dragStartX = width/2;
-		dragStartY = height/2;
+		dragStartX = centerX;
+		dragStartY = centerY;
 		currentDragX = touchX;
 		currentDragY = touchY;
 	}
@@ -1343,5 +1347,12 @@ function drawMobileControls() {
 		fill(255, 255, 255, 150);
 		text("RIGHT", width - 50, height - 80);
 		text("UP/DOWN", width - 50, height - 60);
+		
+		// Draw ball spawning area indicator
+		fill(255, 255, 255, 20);
+		ellipse(width/2, height/2, 200, 200);
+		fill(255, 255, 255, 100);
+		textSize(12);
+		text("BALL SPAWN", width/2, height/2);
 	}
 }
