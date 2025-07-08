@@ -1045,21 +1045,21 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left touch area controls RIGHT bouncer (W/S like PC)
+		// Left touch area controls LEFT bouncer (UP/DOWN like PC)
 		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
-			if (touch.y < height - 60) {
-				bouncerR.y -= speed; // W (up)
-			} else {
-				bouncerR.y += speed; // S (down)
-			}
-		}
-		
-		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
-		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
 				bouncerL.y -= speed; // UP
 			} else {
 				bouncerL.y += speed; // DOWN
+			}
+		}
+		
+		// Right touch area controls RIGHT bouncer (W/S like PC)
+		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
+			if (touch.y < height - 60) {
+				bouncerR.y -= speed; // W (up)
+			} else {
+				bouncerR.y += speed; // S (down)
 			}
 		}
 	}
@@ -1263,14 +1263,14 @@ function touchStarted() {
 		}
 	}
 
-	// Only allow ball spawning in extremely small center area
+	// Allow ball spawning in center area
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
 	
-	// Check if touch is in the tiny center area (30px from center)
+	// Check if touch is in the center area (100px from center)
 	let centerX = width/2;
 	let centerY = height/2;
-	let spawnRadius = 30;
+	let spawnRadius = 100;
 	
 	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
 		// Spawn random ball immediately (no drag)
@@ -1308,12 +1308,12 @@ function drawMobileControls() {
 		text("LEFT", width - 50, height - 80);
 		text("UP/DOWN", width - 50, height - 60);
 		
-		// Draw ball spawning area indicator (extremely small)
+		// Draw ball spawning area indicator
 		fill(255, 255, 255, 20);
-		ellipse(width/2, height/2, 60, 60);
+		ellipse(width/2, height/2, 200, 200);
 		fill(255, 255, 255, 100);
-		textSize(8);
-		text("BALL", width/2, height/2 - 3);
-		text("SPAWN", width/2, height/2 + 3);
+		textSize(12);
+		text("BALL", width/2, height/2 - 8);
+		text("SPAWN", width/2, height/2 + 8);
 	}
 }
