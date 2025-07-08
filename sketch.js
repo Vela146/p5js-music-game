@@ -1045,21 +1045,21 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left touch area controls RIGHT bouncer (W/S like PC)
+		// Left touch area controls LEFT bouncer (UP/DOWN like PC)
 		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
-			if (touch.y < height - 60) {
-				bouncerR.y -= speed; // W (up)
-			} else {
-				bouncerR.y += speed; // S (down)
-			}
-		}
-		
-		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
-		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
 				bouncerL.y -= speed; // UP
 			} else {
 				bouncerL.y += speed; // DOWN
+			}
+		}
+		
+		// Right touch area controls RIGHT bouncer (W/S like PC)
+		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
+			if (touch.y < height - 60) {
+				bouncerR.y -= speed; // W (up)
+			} else {
+				bouncerR.y += speed; // S (down)
 			}
 		}
 	}
@@ -1263,14 +1263,14 @@ function touchStarted() {
 		}
 	}
 
-	// Only allow ball spawning in very small center area
+	// Only allow ball spawning in extremely small center area
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
 	
-	// Check if touch is in the small center area (50px from center)
+	// Check if touch is in the tiny center area (30px from center)
 	let centerX = width/2;
 	let centerY = height/2;
-	let spawnRadius = 50;
+	let spawnRadius = 30;
 	
 	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
 		// Start drag for directional shooting - always from center
@@ -1331,29 +1331,29 @@ function touchEnded() {
 function drawMobileControls() {
 	// Draw touch areas for bouncer controls (only on mobile)
 	if (width < 800) { // Mobile detection
-		// Left touch area controls RIGHT bouncer (W/S like PC)
+		// Left touch area controls LEFT bouncer (UP/DOWN like PC)
 		fill(255, 255, 255, 30);
 		noStroke();
 		rect(10, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
 		textAlign(CENTER, CENTER);
 		textSize(10);
-		text("RIGHT", 50, height - 80);
-		text("W/S", 50, height - 60);
+		text("LEFT", 50, height - 80);
+		text("UP/DOWN", 50, height - 60);
 		
-		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
+		// Right touch area controls RIGHT bouncer (W/S like PC)
 		fill(255, 255, 255, 30);
 		rect(width - 90, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
-		text("LEFT", width - 50, height - 80);
-		text("UP/DOWN", width - 50, height - 60);
+		text("RIGHT", width - 50, height - 80);
+		text("W/S", width - 50, height - 60);
 		
-		// Draw ball spawning area indicator (much smaller)
+		// Draw ball spawning area indicator (extremely small)
 		fill(255, 255, 255, 20);
-		ellipse(width/2, height/2, 100, 100);
+		ellipse(width/2, height/2, 60, 60);
 		fill(255, 255, 255, 100);
-		textSize(10);
-		text("BALL", width/2, height/2 - 5);
-		text("SPAWN", width/2, height/2 + 5);
+		textSize(8);
+		text("BALL", width/2, height/2 - 3);
+		text("SPAWN", width/2, height/2 + 3);
 	}
 }
