@@ -1382,6 +1382,7 @@ function getPanForX(x) {
 
 // Mobile touch controls
 function touchStarted() {
+	console.log('touchStarted', touches[0]?.x, touches[0]?.y);
 	// Robustly resume AudioContext and initialize synths on every touch event
 	if (getAudioContext().state !== 'running') {
 		getAudioContext().resume();
@@ -1418,6 +1419,7 @@ function touchStarted() {
 }
 
 function touchMoved() {
+	console.log('touchMoved', touches[0]?.x, touches[0]?.y);
 	// Robustly resume AudioContext and initialize synths on every touch event
 	if (getAudioContext().state !== 'running') {
 		getAudioContext().resume();
@@ -1439,6 +1441,7 @@ function touchMoved() {
 }
 
 function touchEnded() {
+	console.log('touchEnded');
 	// Robustly resume AudioContext and initialize synths on every touch event
 	if (getAudioContext().state !== 'running') {
 		getAudioContext().resume();
