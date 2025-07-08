@@ -1045,7 +1045,7 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left bouncer control (smaller, more specific area)
+		// Left bouncer control (left side of screen)
 		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
 				bouncerL.y -= speed; // UP
@@ -1054,12 +1054,12 @@ function moveThemThangs() {
 			}
 		}
 		
-		// Right bouncer control (smaller, more specific area)
+		// Right bouncer control (right side of screen)
 		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
-				bouncerR.y -= speed; // W
+				bouncerR.y -= speed; // UP
 			} else {
-				bouncerR.y += speed; // S
+				bouncerR.y += speed; // DOWN
 			}
 		}
 	}
@@ -1263,13 +1263,20 @@ function touchStarted() {
 		}
 	}
 
-	// Start drag for directional shooting - always from center
-	isDragging = true;
-	isDraggingFar = false;
-	dragStartX = width/2;
-	dragStartY = height/2;
-	currentDragX = touches[0].x;
-	currentDragY = touches[0].y;
+	// Only allow ball spawning in center area (not near bouncer controls)
+	let touchX = touches[0].x;
+	let touchY = touches[0].y;
+	
+	// Check if touch is in the center area (not in bouncer control zones)
+	if (touchX > 120 && touchX < width - 120 && touchY < height - 120) {
+		// Start drag for directional shooting - always from center
+		isDragging = true;
+		isDraggingFar = false;
+		dragStartX = width/2;
+		dragStartY = height/2;
+		currentDragX = touchX;
+		currentDragY = touchY;
+	}
 }
 
 function touchMoved() {
@@ -1335,6 +1342,6 @@ function drawMobileControls() {
 		rect(width - 90, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
 		text("RIGHT", width - 50, height - 80);
-		text("W/S", width - 50, height - 60);
+		text("UP/DOWN", width - 50, height - 60);
 	}
 }
