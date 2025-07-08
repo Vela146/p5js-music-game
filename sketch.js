@@ -1375,13 +1375,11 @@ function getPanForX(x) {
 
 // Mobile touch controls
 function touchStarted() {
-	// Resume AudioContext if it's suspended
+	// Robustly resume AudioContext and initialize synths on every touch event
 	if (getAudioContext().state !== 'running') {
 		getAudioContext().resume();
 	}
-
 	if (!synthsInitialized) {
-		// Initialize synths on first user interaction
 		initSynths();
 	}
 
@@ -1412,10 +1410,24 @@ function touchStarted() {
 }
 
 function touchMoved() {
+	// Robustly resume AudioContext and initialize synths on every touch event
+	if (getAudioContext().state !== 'running') {
+		getAudioContext().resume();
+	}
+	if (!synthsInitialized) {
+		initSynths();
+	}
 	// Disabled drag direction feature for mobile - no action needed
 }
 
 function touchEnded() {
+	// Robustly resume AudioContext and initialize synths on every touch event
+	if (getAudioContext().state !== 'running') {
+		getAudioContext().resume();
+	}
+	if (!synthsInitialized) {
+		initSynths();
+	}
 	// Disabled drag direction feature for mobile - no action needed
 }
 
