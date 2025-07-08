@@ -33,6 +33,13 @@ let rhythms = {
 	F: { balls: [], interval: 1000, end: 0 }
 };
 
+// --- Mobile directional shooting state ---
+let mobileIsDragging = false;
+let mobileDragStartX = 0;
+let mobileDragStartY = 0;
+let mobileCurrentDragX = 0;
+let mobileCurrentDragY = 0;
+let mobileIsDraggingFar = false;
 
 // Button system
 
@@ -1392,21 +1399,22 @@ function touchStarted() {
 		}
 	}
 
-	// ONLY allow ball spawning in center area - nothing else should spawn balls
+	// ONLY allow ball spawning/drag in center area
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
-	
 	let centerX = width/2;
 	let centerY = height/2;
 	let spawnRadius = 100;
-	
-	// ONLY spawn ball if touching the center spawn area
 	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
-		// Spawn random ball immediately (no drag)
-		let ball = new Ball(centerX, centerY, 20);
-		balls.push(ball);
+		// Start drag for directional shooting
+		mobileIsDragging = true;
+		mobileIsDraggingFar = false;
+		mobileDragStartX = centerX;
+		mobileDragStartY = centerY;
+		mobileCurrentDragX = touchX;
+		mobileCurrentDragY = touchY;
 	}
-	// If not in spawn area, do nothing (no ball spawning)
+	// If not in spawn area, do nothing
 }
 
 function touchMoved() {
@@ -1417,7 +1425,17 @@ function touchMoved() {
 	if (!synthsInitialized) {
 		initSynths();
 	}
-	// Disabled drag direction feature for mobile - no action needed
+	// Directional drag logic
+	if (mobileIsDragging && touches.length > 0) {
+		mobileCurrentDragX = touches[0].x;
+		mobileCurrentDragY = touches[0].y;
+		let dx = mobileCurrentDragX - mobileDragStartX;
+		let dy = mobileCurrentDragY - mobileDragStartY;
+		let distance = sqrt(dx * dx + dy * dy);
+		if (distance > 10) {
+			mobileIsDraggingFar = true;
+		}
+	}
 }
 
 function touchEnded() {
@@ -1428,7 +1446,34 @@ function touchEnded() {
 	if (!synthsInitialized) {
 		initSynths();
 	}
-	// Disabled drag direction feature for mobile - no action needed
+	// Directional shooting logic
+	if (mobileIsDragging) {
+		let dx = mobileCurrentDragX - mobileDragStartX;
+		let dy = mobileCurrentDragY - mobileDragStartY;
+		let distance = sqrt(dx * dx + dy * dy);
+		let spawnX = width/2;
+		let spawnY = height/2;
+		if (distance > 10) {
+			// Milder speed mapping (same as desktop)
+			let minSpeed = 4;
+			let maxSpeed = 12;
+			let maxDrag = 140;
+			let t = constrain(distance, 0, maxDrag) / maxDrag;
+			let speed = lerp(minSpeed, maxSpeed, t);
+			let normalizedDx = (dx / distance) * speed;
+			let normalizedDy = (dy / distance) * speed;
+			let ball = new Ball(spawnX, spawnY, 20);
+			ball.vx = normalizedDx;
+			ball.vy = normalizedDy;
+			balls.push(ball);
+		} else {
+			// Random ball - always spawn in center
+			let ball = new Ball(spawnX, spawnY, 20);
+			balls.push(ball);
+		}
+		mobileIsDragging = false;
+		mobileIsDraggingFar = false;
+	}
 }
 
 // Mobile bouncer controls with touch areas
@@ -1473,5 +1518,46 @@ function drawMobileControls() {
 		textSize(12);
 		text("BALL", width/2, height/2 - 8);
 		text("SPAWN", width/2, height/2 + 8);
+
+		// Draw drag arrow for directional shooting (mobile)
+		if (mobileIsDragging) {
+			let x0 = mobileDragStartX;
+			let y0 = mobileDragStartY;
+			let x1 = mobileCurrentDragX;
+			let y1 = mobileCurrentDragY;
+			stroke(255, 180);
+			strokeWeight(3);
+			noFill();
+			line(x0, y0, x1, y1);
+			// Draw arrowhead
+			let angle = atan2(y1 - y0, x1 - x0);
+			let ah = 18;
+			let aw = 10;
+			fill(255);
+			noStroke();
+			push();
+			translate(x1, y1);
+			rotate(angle);
+			beginShape();
+			vertex(0, 0);
+			vertex(-ah, -aw);
+			vertex(-ah, aw);
+			endShape(CLOSE);
+			pop();
+
+			// Show speed indicator
+			let dx = x1 - x0;
+			let dy = y1 - y0;
+			let distance = sqrt(dx * dx + dy * dy);
+			fill(255, 255, 255, 200);
+			noStroke();
+			textAlign(CENTER, CENTER);
+			textSize(12);
+			if (distance > 10) {
+				text("Drag to aim, release to shoot", width/2, 30);
+			} else {
+				text("Tap for random ball", width/2, 30);
+			}
+		}
 	}
 }
