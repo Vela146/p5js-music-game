@@ -389,8 +389,8 @@ function draw() {
 		}
 	}
 
-	// Draw gradient arrow for drag
-	if (isDragging) {
+	// Draw gradient arrow for drag (desktop only)
+	if (isDragging && width >= 800) {
 		let x0 = dragStartX;
 		let y0 = dragStartY;
 		let x1 = currentDragX;
@@ -556,8 +556,8 @@ function draw() {
 	// Display level selection buttons
 	displayButtons();
 	
-	// Show directional shooting feedback
-	if (isDragging) {
+	// Show directional shooting feedback (desktop only)
+	if (isDragging && width >= 800) {
 		// Draw direction line
 		stroke(255, 255, 255, 150);
 		strokeWeight(2);
@@ -1041,8 +1041,8 @@ function moveThemThangs() {
 	if (keyIsDown(87)) bouncerR.y -= speed; // W
 	if (keyIsDown(83)) bouncerR.y += speed; // S
 	
-	// Mobile touch controls - only when not dragging balls
-	if (width < 800 && touches.length > 0 && !isDragging) {
+	// Mobile touch controls
+	if (width < 800 && touches.length > 0) {
 		let touch = touches[0];
 		
 		// Left bouncer controls - separate up/down buttons
