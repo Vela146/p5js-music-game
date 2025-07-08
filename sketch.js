@@ -1045,21 +1045,21 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left bouncer control (left side of screen) - UP/DOWN like PC
+		// Left touch area controls RIGHT bouncer (W/S like PC)
 		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
-			if (touch.y < height - 60) {
-				bouncerL.y -= speed; // UP
-			} else {
-				bouncerL.y += speed; // DOWN
-			}
-		}
-		
-		// Right bouncer control (right side of screen) - W/S like PC
-		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
 				bouncerR.y -= speed; // W (up)
 			} else {
 				bouncerR.y += speed; // S (down)
+			}
+		}
+		
+		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
+		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
+			if (touch.y < height - 60) {
+				bouncerL.y -= speed; // UP
+			} else {
+				bouncerL.y += speed; // DOWN
 			}
 		}
 	}
@@ -1331,22 +1331,22 @@ function touchEnded() {
 function drawMobileControls() {
 	// Draw touch areas for bouncer controls (only on mobile)
 	if (width < 800) { // Mobile detection
-		// Left bouncer touch area (UP/DOWN like PC)
+		// Left touch area controls RIGHT bouncer (W/S like PC)
 		fill(255, 255, 255, 30);
 		noStroke();
 		rect(10, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
 		textAlign(CENTER, CENTER);
 		textSize(10);
-		text("LEFT", 50, height - 80);
-		text("UP/DOWN", 50, height - 60);
+		text("RIGHT", 50, height - 80);
+		text("W/S", 50, height - 60);
 		
-		// Right bouncer touch area (W/S like PC)
+		// Right touch area controls LEFT bouncer (UP/DOWN like PC)
 		fill(255, 255, 255, 30);
 		rect(width - 90, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
-		text("RIGHT", width - 50, height - 80);
-		text("W/S", width - 50, height - 60);
+		text("LEFT", width - 50, height - 80);
+		text("UP/DOWN", width - 50, height - 60);
 		
 		// Draw ball spawning area indicator (much smaller)
 		fill(255, 255, 255, 20);
