@@ -1041,22 +1041,22 @@ function moveThemThangs() {
 	if (keyIsDown(87)) bouncerR.y -= speed; // W
 	if (keyIsDown(83)) bouncerR.y += speed; // S
 	
-	// Mobile touch controls
-	if (width < 800 && touches.length > 0) {
+	// Mobile touch controls - only when not dragging balls
+	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left bouncer control (left side of screen)
-		if (touch.x < width/2 && touch.y > height - 120) {
-			if (touch.y < height - 70) {
+		// Left bouncer control (smaller, more specific area)
+		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
+			if (touch.y < height - 60) {
 				bouncerL.y -= speed; // UP
 			} else {
 				bouncerL.y += speed; // DOWN
 			}
 		}
 		
-		// Right bouncer control (right side of screen)
-		if (touch.x > width/2 && touch.y > height - 120) {
-			if (touch.y < height - 70) {
+		// Right bouncer control (smaller, more specific area)
+		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
+			if (touch.y < height - 60) {
 				bouncerR.y -= speed; // W
 			} else {
 				bouncerR.y += speed; // S
@@ -1320,19 +1320,21 @@ function touchEnded() {
 function drawMobileControls() {
 	// Draw touch areas for bouncer controls (only on mobile)
 	if (width < 800) { // Mobile detection
-		// Left bouncer touch area
-		fill(255, 255, 255, 50);
+		// Left bouncer touch area (smaller and more specific)
+		fill(255, 255, 255, 30);
 		noStroke();
-		rect(10, height - 120, 80, 100);
+		rect(10, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
 		textAlign(CENTER, CENTER);
-		textSize(12);
-		text("UP/DOWN", 50, height - 70);
+		textSize(10);
+		text("LEFT", 50, height - 80);
+		text("UP/DOWN", 50, height - 60);
 		
-		// Right bouncer touch area
-		fill(255, 255, 255, 50);
-		rect(width - 90, height - 120, 80, 100);
+		// Right bouncer touch area (smaller and more specific)
+		fill(255, 255, 255, 30);
+		rect(width - 90, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
-		text("W/S", width - 50, height - 70);
+		text("RIGHT", width - 50, height - 80);
+		text("W/S", width - 50, height - 60);
 	}
 }
