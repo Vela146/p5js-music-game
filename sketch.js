@@ -1174,32 +1174,41 @@ function moveThemThangs() {
 	
 	// Mobile touch controls
 	if (width < 800 && touches.length > 0) {
-		// Allow simultaneous control of both bouncers
+		// Debug: print all touches
+		console.log('touches:', JSON.stringify(touches));
+		let leftMoved = false;
+		let rightMoved = false;
+		// Increase touch area for easier multi-touch
+		const bouncerAreaWidth = 140; // was 100
+		const bouncerAreaHeight = 60; // was 40
+		const bouncerAreaYTop = height - 120; // was -100
+		const bouncerAreaYBottom = height - 10; // was -20
 		for (let i = 0; i < touches.length; i++) {
 			let touch = touches[i];
-			// Left touch area controls RIGHT bouncer (which is on the left side)
-			if (touch.x < 100) {
-				// Right bouncer UP button
-				if (touch.y > height - 100 && touch.y < height - 60) {
+			// Left side controls RIGHT bouncer
+			if (touch.x < bouncerAreaWidth) {
+				if (touch.y > bouncerAreaYTop && touch.y < bouncerAreaYTop + bouncerAreaHeight) {
 					bouncerR.y -= speed; // UP
+					rightMoved = true;
 				}
-				// Right bouncer DOWN button
-				if (touch.y > height - 60 && touch.y < height - 20) {
+				if (touch.y > bouncerAreaYTop + bouncerAreaHeight && touch.y < bouncerAreaYBottom) {
 					bouncerR.y += speed; // DOWN
+					rightMoved = true;
 				}
 			}
-			// Right touch area controls LEFT bouncer (which is on the right side)
-			if (touch.x > width - 100) {
-				// Left bouncer UP button
-				if (touch.y > height - 100 && touch.y < height - 60) {
+			// Right side controls LEFT bouncer
+			if (touch.x > width - bouncerAreaWidth) {
+				if (touch.y > bouncerAreaYTop && touch.y < bouncerAreaYTop + bouncerAreaHeight) {
 					bouncerL.y -= speed; // UP
+					leftMoved = true;
 				}
-				// Left bouncer DOWN button
-				if (touch.y > height - 60 && touch.y < height - 20) {
+				if (touch.y > bouncerAreaYTop + bouncerAreaHeight && touch.y < bouncerAreaYBottom) {
 					bouncerL.y += speed; // DOWN
+					leftMoved = true;
 				}
 			}
 		}
+		console.log('bouncerL moved:', leftMoved, 'bouncerR moved:', rightMoved);
 	}
 
 	// Constrain bouncers to screen bounds
