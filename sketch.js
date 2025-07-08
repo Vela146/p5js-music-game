@@ -1045,7 +1045,7 @@ function moveThemThangs() {
 	if (width < 800 && touches.length > 0 && !isDragging) {
 		let touch = touches[0];
 		
-		// Left bouncer control (left side of screen)
+		// Left bouncer control (left side of screen) - UP/DOWN like PC
 		if (touch.x < 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
 				bouncerL.y -= speed; // UP
@@ -1054,12 +1054,12 @@ function moveThemThangs() {
 			}
 		}
 		
-		// Right bouncer control (right side of screen)
+		// Right bouncer control (right side of screen) - W/S like PC
 		if (touch.x > width - 100 && touch.y > height - 100 && touch.y < height - 20) {
 			if (touch.y < height - 60) {
-				bouncerR.y -= speed; // UP
+				bouncerR.y -= speed; // W (up)
 			} else {
-				bouncerR.y += speed; // DOWN
+				bouncerR.y += speed; // S (down)
 			}
 		}
 	}
@@ -1267,10 +1267,10 @@ function touchStarted() {
 	let touchX = touches[0].x;
 	let touchY = touches[0].y;
 	
-	// Check if touch is in the small center area (100px from center)
+	// Check if touch is in the small center area (50px from center)
 	let centerX = width/2;
 	let centerY = height/2;
-	let spawnRadius = 100;
+	let spawnRadius = 50;
 	
 	if (dist(touchX, touchY, centerX, centerY) < spawnRadius) {
 		// Start drag for directional shooting - always from center
@@ -1331,7 +1331,7 @@ function touchEnded() {
 function drawMobileControls() {
 	// Draw touch areas for bouncer controls (only on mobile)
 	if (width < 800) { // Mobile detection
-		// Left bouncer touch area (smaller and more specific)
+		// Left bouncer touch area (UP/DOWN like PC)
 		fill(255, 255, 255, 30);
 		noStroke();
 		rect(10, height - 100, 80, 80);
@@ -1341,18 +1341,19 @@ function drawMobileControls() {
 		text("LEFT", 50, height - 80);
 		text("UP/DOWN", 50, height - 60);
 		
-		// Right bouncer touch area (smaller and more specific)
+		// Right bouncer touch area (W/S like PC)
 		fill(255, 255, 255, 30);
 		rect(width - 90, height - 100, 80, 80);
 		fill(255, 255, 255, 150);
 		text("RIGHT", width - 50, height - 80);
-		text("UP/DOWN", width - 50, height - 60);
+		text("W/S", width - 50, height - 60);
 		
-		// Draw ball spawning area indicator
+		// Draw ball spawning area indicator (much smaller)
 		fill(255, 255, 255, 20);
-		ellipse(width/2, height/2, 200, 200);
+		ellipse(width/2, height/2, 100, 100);
 		fill(255, 255, 255, 100);
-		textSize(12);
-		text("BALL SPAWN", width/2, height/2);
+		textSize(10);
+		text("BALL", width/2, height/2 - 5);
+		text("SPAWN", width/2, height/2 + 5);
 	}
 }
