@@ -106,7 +106,7 @@ class Obstacle {
 			
 			// Bounce off top and bottom walls (within safe bounds)
 			let topBound = 20 + this.height/2;  // Top wall is at y=0, height=10, so safe area starts at y=20
-			let bottomBound = 380 - this.height/2; // Bottom wall is at y=400, height=10, so safe area ends at y=380
+			let bottomBound = height - 20 - this.height/2; // Bottom wall is at y=height, height=10, so safe area ends at y=height-20
 			
 			if (this.y <= topBound || this.y >= bottomBound) {
 				this.direction *= -1;
@@ -688,44 +688,59 @@ function setupLevel(level) {
 		// No obstacles - perfect for learning the instrument
 	} else if (level === 2) {
 		// Mode 2: Echo Chamber - Two dividers, new locations
-		obstacles.push(new Obstacle(width * 0.275, height * 0.3, 20, 40, color(255, 182, 193)));
-		obstacles.push(new Obstacle(width * 0.725, height * 0.7, 20, 40, color(173, 216, 230)));
+		let obstacleWidth = Math.max(15, width * 0.025); // Minimum 15px, or 2.5% of width
+		let obstacleHeight = Math.max(30, height * 0.1); // Minimum 30px, or 10% of height
+		obstacles.push(new Obstacle(width * 0.275, height * 0.3, obstacleWidth, obstacleHeight, color(255, 182, 193)));
+		obstacles.push(new Obstacle(width * 0.725, height * 0.7, obstacleWidth, obstacleHeight, color(173, 216, 230)));
 	} else if (level === 3) {
 		// Mode 3: Triangle Resonance - Three obstacles in triangular formation
-		obstacles.push(new Obstacle(width * 0.3125, height * 0.375, 20, 60, color(255, 218, 185)));
-		obstacles.push(new Obstacle(width * 0.5, height * 0.625, 20, 60, color(221, 160, 221)));
-		obstacles.push(new Obstacle(width * 0.6875, height * 0.375, 20, 60, color(176, 224, 230)));
+		let obstacleWidth = Math.max(15, width * 0.025); // Minimum 15px, or 2.5% of width
+		let obstacleHeight = Math.max(40, height * 0.15); // Minimum 40px, or 15% of height
+		obstacles.push(new Obstacle(width * 0.3125, height * 0.375, obstacleWidth, obstacleHeight, color(255, 218, 185)));
+		obstacles.push(new Obstacle(width * 0.5, height * 0.625, obstacleWidth, obstacleHeight, color(221, 160, 221)));
+		obstacles.push(new Obstacle(width * 0.6875, height * 0.375, obstacleWidth, obstacleHeight, color(176, 224, 230)));
 	} else if (level === 4) {
 		// Mode 4: Corner Harmony - Four corner obstacles create a frame
-		obstacles.push(new Obstacle(width * 0.1875, height * 0.25, 20, 80, color(255, 192, 203)));
-		obstacles.push(new Obstacle(width * 0.8125, height * 0.25, 20, 80, color(173, 216, 230)));
-		obstacles.push(new Obstacle(width * 0.1875, height * 0.75, 20, 80, color(255, 218, 185)));
-		obstacles.push(new Obstacle(width * 0.8125, height * 0.75, 20, 80, color(221, 160, 221)));
+		let obstacleWidth = Math.max(15, width * 0.025); // Minimum 15px, or 2.5% of width
+		let obstacleHeight = Math.max(50, height * 0.2); // Minimum 50px, or 20% of height
+		obstacles.push(new Obstacle(width * 0.1875, height * 0.25, obstacleWidth, obstacleHeight, color(255, 192, 203)));
+		obstacles.push(new Obstacle(width * 0.8125, height * 0.25, obstacleWidth, obstacleHeight, color(173, 216, 230)));
+		obstacles.push(new Obstacle(width * 0.1875, height * 0.75, obstacleWidth, obstacleHeight, color(255, 218, 185)));
+		obstacles.push(new Obstacle(width * 0.8125, height * 0.75, obstacleWidth, obstacleHeight, color(221, 160, 221)));
 	} else if (level === 5) {
 		// Mode 5: Flowing Melody - Two moving obstacles create dynamic patterns
-		let movingObs1 = new Obstacle(width * 0.375, height * 0.25, 15, 60, color(255, 218, 185));
+		let obstacleWidth = Math.max(12, width * 0.02); // Minimum 12px, or 2% of width
+		let obstacleHeight = Math.max(40, height * 0.15); // Minimum 40px, or 15% of height
+		let movingObs1 = new Obstacle(width * 0.375, height * 0.25, obstacleWidth, obstacleHeight, color(255, 218, 185));
 		movingObs1.speed = 2;
 		movingObstacles.push(movingObs1);
-		let movingObs2 = new Obstacle(width * 0.625, height * 0.75, 15, 60, color(221, 160, 221));
+		let movingObs2 = new Obstacle(width * 0.625, height * 0.75, obstacleWidth, obstacleHeight, color(221, 160, 221));
 		movingObs2.speed = 1.5;
 		movingObs2.direction = -1;
 		movingObstacles.push(movingObs2);
 	} else if (level === 6) {
 		// Mode 6: Open Groove - Two horizontal obstacles (upper and lower)
-		obstacles.push(new Obstacle(width * 0.5, height * 0.225, width * 0.375, 18, color(255, 182, 193)));
-		obstacles.push(new Obstacle(width * 0.5, height * 0.775, width * 0.375, 18, color(173, 216, 230)));
+		let obstacleWidth = width * 0.375; // 37.5% of width
+		let obstacleHeight = Math.max(12, height * 0.045); // Minimum 12px, or 4.5% of height
+		obstacles.push(new Obstacle(width * 0.5, height * 0.225, obstacleWidth, obstacleHeight, color(255, 182, 193)));
+		obstacles.push(new Obstacle(width * 0.5, height * 0.775, obstacleWidth, obstacleHeight, color(173, 216, 230)));
 	} else if (level === 7) {
 		// Mode 7: Diagonal Jam - Two diagonal obstacles
+		let obstacleWidth = width * 0.225; // 22.5% of width
+		let obstacleHeight = Math.max(12, height * 0.045); // Minimum 12px, or 4.5% of height
 		// Diagonal 1: top-left to center
-		obstacles.push(new Obstacle(width * 0.25, height * 0.25, width * 0.225, 18, color(255, 218, 185)));
+		obstacles.push(new Obstacle(width * 0.25, height * 0.25, obstacleWidth, obstacleHeight, color(255, 218, 185)));
 		obstacles[obstacles.length-1].angle = -30; // Custom property for drawing
 		// Diagonal 2: bottom-right to center
-		obstacles.push(new Obstacle(width * 0.75, height * 0.75, width * 0.225, 18, color(221, 160, 221)));
+		obstacles.push(new Obstacle(width * 0.75, height * 0.75, obstacleWidth, obstacleHeight, color(221, 160, 221)));
 		obstacles[obstacles.length-1].angle = 30;
 	} else if (level === 8) {
 		// Mode 8: Crossover - One horizontal (upper) and one diagonal (lower left to center)
-		obstacles.push(new Obstacle(width * 0.5, height * 0.225, width * 0.4, 18, color(176, 224, 230)));
-		obstacles.push(new Obstacle(width * 0.225, height * 0.8, width * 0.225, 18, color(255, 192, 203)));
+		let obstacleWidth1 = width * 0.4; // 40% of width
+		let obstacleWidth2 = width * 0.225; // 22.5% of width
+		let obstacleHeight = Math.max(12, height * 0.045); // Minimum 12px, or 4.5% of height
+		obstacles.push(new Obstacle(width * 0.5, height * 0.225, obstacleWidth1, obstacleHeight, color(176, 224, 230)));
+		obstacles.push(new Obstacle(width * 0.225, height * 0.8, obstacleWidth2, obstacleHeight, color(255, 192, 203)));
 		obstacles[obstacles.length-1].angle = 25;
 	} else if (level === 9) {
 		// Mode 9: Spiral Groove - Four obstacles in a spiral pattern
@@ -734,6 +749,8 @@ function setupLevel(level) {
 		let maxRadius = Math.min(width, height) * 0.2375;
 		let radii = [maxRadius * 0.368, maxRadius * 0.579, maxRadius * 0.789, maxRadius];
 		let angles = [0, 30, 60, 90];
+		let obstacleWidth = Math.max(12, width * 0.0225); // Minimum 12px, or 2.25% of width
+		let obstacleHeight = Math.max(50, height * 0.2); // Minimum 50px, or 20% of height
 		let colors = [
 			color(120, 180, 255), // blue
 			color(180, 120, 255), // purple
@@ -745,7 +762,7 @@ function setupLevel(level) {
 			let theta = radians(angles[i]);
 			let x = centerX + rad * cos(theta);
 			let y = centerY + rad * sin(theta);
-			let obs = new Obstacle(x, y, 18, 80, colors[i]);
+			let obs = new Obstacle(x, y, obstacleWidth, obstacleHeight, colors[i]);
 			obs.angle = angles[i];
 			obstacles.push(obs);
 		}
@@ -753,93 +770,140 @@ function setupLevel(level) {
 }
 
 function updateObstaclePositions() {
-	// Update obstacle positions based on current canvas size
-	// This function recalculates positions for the current level
+	// Update obstacle positions and sizes based on current canvas size
+	// This function recalculates positions and sizes for the current level
 	if (currentLevel === 1) {
 		// Level 1 has no obstacles
 		return;
 	} else if (currentLevel === 2) {
 		// Mode 2: Echo Chamber - Two dividers, new locations
 		if (obstacles.length >= 2) {
-			obstacles[0].x = width * 0.275; // 220/800 = 0.275
-			obstacles[0].y = height * 0.3;  // 120/400 = 0.3
-			obstacles[1].x = width * 0.725; // 580/800 = 0.725
-			obstacles[1].y = height * 0.7;  // 280/400 = 0.7
+			let obstacleWidth = Math.max(15, width * 0.025);
+			let obstacleHeight = Math.max(30, height * 0.1);
+			obstacles[0].x = width * 0.275;
+			obstacles[0].y = height * 0.3;
+			obstacles[0].width = obstacleWidth;
+			obstacles[0].height = obstacleHeight;
+			obstacles[1].x = width * 0.725;
+			obstacles[1].y = height * 0.7;
+			obstacles[1].width = obstacleWidth;
+			obstacles[1].height = obstacleHeight;
 		}
 	} else if (currentLevel === 3) {
 		// Mode 3: Triangle Resonance - Three obstacles in triangular formation
 		if (obstacles.length >= 3) {
-			obstacles[0].x = width * 0.3125; // 250/800 = 0.3125
-			obstacles[0].y = height * 0.375; // 150/400 = 0.375
-			obstacles[1].x = width * 0.5;    // 400/800 = 0.5
-			obstacles[1].y = height * 0.625; // 250/400 = 0.625
-			obstacles[2].x = width * 0.6875; // 550/800 = 0.6875
-			obstacles[2].y = height * 0.375; // 150/400 = 0.375
+			let obstacleWidth = Math.max(15, width * 0.025);
+			let obstacleHeight = Math.max(40, height * 0.15);
+			obstacles[0].x = width * 0.3125;
+			obstacles[0].y = height * 0.375;
+			obstacles[0].width = obstacleWidth;
+			obstacles[0].height = obstacleHeight;
+			obstacles[1].x = width * 0.5;
+			obstacles[1].y = height * 0.625;
+			obstacles[1].width = obstacleWidth;
+			obstacles[1].height = obstacleHeight;
+			obstacles[2].x = width * 0.6875;
+			obstacles[2].y = height * 0.375;
+			obstacles[2].width = obstacleWidth;
+			obstacles[2].height = obstacleHeight;
 		}
 	} else if (currentLevel === 4) {
 		// Mode 4: Corner Harmony - Four corner obstacles create a frame
 		if (obstacles.length >= 4) {
-			obstacles[0].x = width * 0.1875; // 150/800 = 0.1875
-			obstacles[0].y = height * 0.25;  // 100/400 = 0.25
-			obstacles[1].x = width * 0.8125; // 650/800 = 0.8125
-			obstacles[1].y = height * 0.25;  // 100/400 = 0.25
-			obstacles[2].x = width * 0.1875; // 150/800 = 0.1875
-			obstacles[2].y = height * 0.75;  // 300/400 = 0.75
-			obstacles[3].x = width * 0.8125; // 650/800 = 0.8125
-			obstacles[3].y = height * 0.75;  // 300/400 = 0.75
+			let obstacleWidth = Math.max(15, width * 0.025);
+			let obstacleHeight = Math.max(50, height * 0.2);
+			obstacles[0].x = width * 0.1875;
+			obstacles[0].y = height * 0.25;
+			obstacles[0].width = obstacleWidth;
+			obstacles[0].height = obstacleHeight;
+			obstacles[1].x = width * 0.8125;
+			obstacles[1].y = height * 0.25;
+			obstacles[1].width = obstacleWidth;
+			obstacles[1].height = obstacleHeight;
+			obstacles[2].x = width * 0.1875;
+			obstacles[2].y = height * 0.75;
+			obstacles[2].width = obstacleWidth;
+			obstacles[2].height = obstacleHeight;
+			obstacles[3].x = width * 0.8125;
+			obstacles[3].y = height * 0.75;
+			obstacles[3].width = obstacleWidth;
+			obstacles[3].height = obstacleHeight;
 		}
 	} else if (currentLevel === 5) {
 		// Mode 5: Flowing Melody - Two moving obstacles create dynamic patterns
 		if (movingObstacles.length >= 2) {
-			movingObstacles[0].x = width * 0.375; // 300/800 = 0.375
-			movingObstacles[0].y = height * 0.25; // 100/400 = 0.25
-			movingObstacles[1].x = width * 0.625; // 500/800 = 0.625
-			movingObstacles[1].y = height * 0.75; // 300/400 = 0.75
+			let obstacleWidth = Math.max(12, width * 0.02);
+			let obstacleHeight = Math.max(40, height * 0.15);
+			movingObstacles[0].x = width * 0.375;
+			movingObstacles[0].y = height * 0.25;
+			movingObstacles[0].width = obstacleWidth;
+			movingObstacles[0].height = obstacleHeight;
+			movingObstacles[1].x = width * 0.625;
+			movingObstacles[1].y = height * 0.75;
+			movingObstacles[1].width = obstacleWidth;
+			movingObstacles[1].height = obstacleHeight;
 		}
 	} else if (currentLevel === 6) {
 		// Mode 6: Open Groove - Two horizontal obstacles (upper and lower)
 		if (obstacles.length >= 2) {
-			obstacles[0].x = width * 0.5;    // 400/800 = 0.5
-			obstacles[0].y = height * 0.225; // 90/400 = 0.225
-			obstacles[0].width = width * 0.375; // 300/800 = 0.375
-			obstacles[1].x = width * 0.5;    // 400/800 = 0.5
-			obstacles[1].y = height * 0.775; // 310/400 = 0.775
-			obstacles[1].width = width * 0.375; // 300/800 = 0.375
+			let obstacleWidth = width * 0.375;
+			let obstacleHeight = Math.max(12, height * 0.045);
+			obstacles[0].x = width * 0.5;
+			obstacles[0].y = height * 0.225;
+			obstacles[0].width = obstacleWidth;
+			obstacles[0].height = obstacleHeight;
+			obstacles[1].x = width * 0.5;
+			obstacles[1].y = height * 0.775;
+			obstacles[1].width = obstacleWidth;
+			obstacles[1].height = obstacleHeight;
 		}
 	} else if (currentLevel === 7) {
 		// Mode 7: Diagonal Jam - Two diagonal obstacles
 		if (obstacles.length >= 2) {
-			obstacles[0].x = width * 0.25;   // 200/800 = 0.25
-			obstacles[0].y = height * 0.25;  // 100/400 = 0.25
-			obstacles[0].width = width * 0.225; // 180/800 = 0.225
-			obstacles[1].x = width * 0.75;   // 600/800 = 0.75
-			obstacles[1].y = height * 0.75;  // 300/400 = 0.75
-			obstacles[1].width = width * 0.225; // 180/800 = 0.225
+			let obstacleWidth = width * 0.225;
+			let obstacleHeight = Math.max(12, height * 0.045);
+			obstacles[0].x = width * 0.25;
+			obstacles[0].y = height * 0.25;
+			obstacles[0].width = obstacleWidth;
+			obstacles[0].height = obstacleHeight;
+			obstacles[1].x = width * 0.75;
+			obstacles[1].y = height * 0.75;
+			obstacles[1].width = obstacleWidth;
+			obstacles[1].height = obstacleHeight;
 		}
 	} else if (currentLevel === 8) {
 		// Mode 8: Crossover - One horizontal (upper) and one diagonal (lower left to center)
 		if (obstacles.length >= 2) {
-			obstacles[0].x = width * 0.5;    // 400/800 = 0.5
-			obstacles[0].y = height * 0.225; // 90/400 = 0.225
-			obstacles[0].width = width * 0.4; // 320/800 = 0.4
-			obstacles[1].x = width * 0.225;  // 180/800 = 0.225
-			obstacles[1].y = height * 0.8;   // 320/400 = 0.8
-			obstacles[1].width = width * 0.225; // 180/800 = 0.225
+			let obstacleWidth1 = width * 0.4;
+			let obstacleWidth2 = width * 0.225;
+			let obstacleHeight = Math.max(12, height * 0.045);
+			obstacles[0].x = width * 0.5;
+			obstacles[0].y = height * 0.225;
+			obstacles[0].width = obstacleWidth1;
+			obstacles[0].height = obstacleHeight;
+			obstacles[1].x = width * 0.225;
+			obstacles[1].y = height * 0.8;
+			obstacles[1].width = obstacleWidth2;
+			obstacles[1].height = obstacleHeight;
 		}
 	} else if (currentLevel === 9) {
 		// Mode 9: Spiral Groove - Four obstacles in a spiral pattern
 		if (obstacles.length >= 4) {
-			let centerX = width * 0.5;  // 400/800 = 0.5
-			let centerY = height * 0.5; // 200/400 = 0.5
-			let maxRadius = Math.min(width, height) * 0.2375; // 190/800 = 0.2375 (scaled to smaller dimension)
-			let radii = [maxRadius * 0.368, maxRadius * 0.579, maxRadius * 0.789, maxRadius]; // Scaled from [70, 110, 150, 190]
+			let centerX = width * 0.5;
+			let centerY = height * 0.5;
+			let maxRadius = Math.min(width, height) * 0.2375;
+			let radii = [maxRadius * 0.368, maxRadius * 0.579, maxRadius * 0.789, maxRadius];
 			let angles = [0, 30, 60, 90];
+			let obstacleWidth = Math.max(12, width * 0.0225);
+			let obstacleHeight = Math.max(50, height * 0.2);
 			
 			for (let i = 0; i < 4; i++) {
 				let rad = radii[i];
 				let theta = radians(angles[i]);
 				obstacles[i].x = centerX + rad * cos(theta);
 				obstacles[i].y = centerY + rad * sin(theta);
+				obstacles[i].width = obstacleWidth;
+				obstacles[i].height = obstacleHeight;
 			}
 		}
 	}
